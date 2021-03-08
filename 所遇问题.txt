@@ -1,0 +1,100 @@
+图书信息，学生信息，管理员信息，管理员管理图书是否在馆，管理员管理学生是否存在。
+
+静态资源加载失败问题：
+1.检查静态资源是否上传成功，在target目录中是否存在。若不存在删除target下对应目录，重新运行。
+2.检查springmvc-servlet中是否引入静态资源，以及是否配置正确
+<mvc:annotation-driven />
+ <mvc:resources mapping="/css/**" location="/resouces/css/**" />
+ <mvc:resources mapping="/img/**" location="/resouces/img/**" />
+ <mvc:resources mapping="/js/**" location="/resouces/js/**" />
+3.检查web.xml中是否配置对应类型资源，代码如下
+<servlet-mapping>
+  <servlet-name>default</servlet-name>
+  <url-pattern>*.css</url-pattern>
+  <url-pattern>*.js</url-pattern>
+  <url-pattern>*.gif</url-pattern>
+  <url-pattern>*.png</url-pattern>
+  <url-pattern>*.jpg</url-pattern>
+</servlet-mapping>
+4.检查jsp页面引用对应资源时是否配置正确
+<link href="/libs/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+5.是否使用了相对路径（controller中return前不加/，jsp页面action方法前不加/），使用${pageContext.request.contextPath}即可解决，即绝对路径
+ <link rel="stylesheet" href="${pageContext.request.contextPath}/css/showStudent.css">或使用
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<base href="<%=basePath%>">
+
+
+springmvc表单提交时，action路径会导致转跳路径增加
+1.使用绝对路径即action="${pageContext.request.contextPath}/manager/login"
+
+3页面跳转加/和不加/的区别
+1）当页面跳转路径加/时，表示是绝对路径（推荐）
+请求该方法的路径：http://localhost:8080/项目名/+return返回的路径
+2）当页面跳转路径不加/时，表示是相对路径（不推荐）
+请求该方法的路径：当前页面路径+return返回的路径
+路径拼接导致路径长度增加，如多一个users，导致404错误
+
+ssm <iframe src></iframe>中的路径问题：
+web-inf下的文件好像浏览器不能直接访问的吧，应该通过后台转
+
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactory' defined in class path resource [applicationContext.xml]:问题
+一般原音出现在对应实体类的mapper文件中，如类名出错等，
+
+
+
+前端查询结果返回为list<>类型：使用（类名.属性名）；返回结果为对象类型，使用属性名。
+
+
+
+
+<table><td>中文字如何自动换行问题：
+在显示长内容的td里面将内容放在div标签里面。
+给div标签加样式
+style="width:100%;white-space:normal;word-wrap:break-word;word-break:break-all;"
+如：<style>
+.warp{width:100%;white-space:normal;word-wrap:break-word;word-break:break-all;}
+</style>
+<td><div class="warp">布先生 字母印花 新品短袖男 潮流印花圆领男士上衣</div></td>
+
+
+
+org.apache.ibatis.reflection.ReflectionException: There is no getter for property named 'tid' in 'class com.entity.Book'问题：
+1.mapper文件出现了与实体类不同的属性，修改mapper文件或实体类
+
+
+
+
+mysql提示Column count doesn't match value count at row 1错误：
+参数的数量或类型与数据中的不一致。
+
+
+
+解决实体类中关联参数为另一个实体类，前端无法绑定问题：
+ @InitBinder("goods")
+    public void init(WebDataBinder binder) {
+        binder.setFieldDefaultPrefix("goods.");
+    }
+ @InitBinder指定后端匹配的参数名
+setFieldDefaultPrefix指定前端以何为开头，才能与后端实体匹配。
+
+
+下拉列表选择后台传入的关联属性在下拉列表中的位置：
+<option value="0" <c:if test='${param.state == "0" }'>selected</c:if>>启用</option>
+
+
+弹出输入框，输入并获取值：
+<script type="text/javascript">
+function diag()
+{
+    var str=prompt("随便写点儿啥吧","比如我叫啥");
+    if(str)
+    {
+        alert("您刚输入的是："+ str)
+    }
+}
+ 
+</script>
